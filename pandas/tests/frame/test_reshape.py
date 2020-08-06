@@ -1303,4 +1303,14 @@ def test_unstacking_multi_index_df():
     )
     tm.assert_frame_equal(result, expected)
 
-    
+
+def test_unstack_preserves_categorical_values():
+    # GH 14018
+    idx = pd.MultiIndex.from_product(
+        [['A'], [0, 1]]
+    )
+    df = DataFrame(
+        {'cat': pd.Categorical(['a', 'b'])},
+        index=idx
+    )
+    assert np.array(df.unstack()).dtype.name == 'category'
